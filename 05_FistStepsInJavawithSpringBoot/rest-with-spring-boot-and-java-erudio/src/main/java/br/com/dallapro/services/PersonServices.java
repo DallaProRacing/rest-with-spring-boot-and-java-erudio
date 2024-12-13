@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.dallapro.data.vo.v1.PersonVo;
+import br.com.dallapro.data.vo.v2.PersonVoV2;
 import br.com.dallapro.exceptions.ResouseNotFoundException;
 import br.com.dallapro.mapper.Mapper;
+import br.com.dallapro.mapper.custom.PersonMapper;
 import br.com.dallapro.model.Person;
 import br.com.dallapro.repositories.PersonRepository;
 
@@ -21,10 +23,19 @@ public class PersonServices {
 	  @Autowired
 	  PersonRepository repository;
 	  
+	  @Autowired
+	  PersonMapper mapper;
+	  
 	  public PersonVo create(PersonVo person) {	  
 		  logger.info("Creating one person!");
 		  var entity = Mapper.parseObject(person, Person.class);
 		  var vo = Mapper.parseObject(repository.save(entity),PersonVo.class);
+		  return vo;
+	  }
+	  public PersonVoV2 createV2(PersonVoV2 person) {	  
+		  logger.info("Creating one person V2!");
+		  var entity = mapper.convertVoToEntity(person);
+		  var vo = mapper.convertEntityToVo(repository.save(entity));
 		  return vo;
 	  }
 	  
