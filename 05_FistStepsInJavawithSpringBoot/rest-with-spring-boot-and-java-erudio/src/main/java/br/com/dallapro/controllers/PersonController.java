@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.dallapro.data.vo.v1.PersonVo;
-
+import br.com.dallapro.data.vo.v2.PersonVoV2;
 import br.com.dallapro.services.PersonServices;
 
 @RestController
@@ -23,7 +23,7 @@ import br.com.dallapro.services.PersonServices;
 public class PersonController {
 
 	@Autowired
-	private PersonServices service;
+	private PersonServices service;	
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PersonVo findById(@PathVariable(value = "id")Long id) throws Exception{
@@ -40,6 +40,13 @@ public class PersonController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public PersonVo  create(@RequestBody PersonVo person) {
 		return service.create(person);
+	}
+	
+	@PostMapping(value = "/v2",
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public PersonVoV2  createV2(@RequestBody PersonVoV2 person) {
+		return service.createV2(person);
 	}
 	
 	@PutMapping(
