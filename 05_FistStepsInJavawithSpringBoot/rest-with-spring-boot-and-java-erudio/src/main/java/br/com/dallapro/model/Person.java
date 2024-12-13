@@ -3,15 +3,35 @@ package br.com.dallapro.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+
+@Entity
+@Table(name = "person")
 public class Person implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(name = "first_Name", nullable = false, length = 80)
 	private String firstName;
-	private String lasttName;
+	
+	@Column(name = "last_Name", nullable = false, length = 80)
+	private String lastName;
+	
+	@Column(nullable = false, length = 100)
 	private String address;
-	private String gener;
+	
+	@Column(nullable = false, length = 6)
+	private String gender;
 	
 	public Person() {		
 	}
@@ -32,12 +52,12 @@ public class Person implements Serializable{
 		this.firstName = firstName;
 	}
 
-	public String getLasttName() {
-		return lasttName;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLasttName(String lasttName) {
-		this.lasttName = lasttName;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getAddress() {
@@ -48,17 +68,17 @@ public class Person implements Serializable{
 		this.address = address;
 	}
 
-	public String getGener() {
-		return gener;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setGener(String gener) {
-		this.gener = gener;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, firstName, gener, id, lasttName);
+		return Objects.hash(address, firstName, gender, id, lastName);
 	}
 
 	@Override
@@ -71,8 +91,8 @@ public class Person implements Serializable{
 			return false;
 		Person other = (Person) obj;
 		return Objects.equals(address, other.address) && Objects.equals(firstName, other.firstName)
-				&& Objects.equals(gener, other.gener) && Objects.equals(id, other.id)
-				&& Objects.equals(lasttName, other.lasttName);
+				&& Objects.equals(gender, other.gender) && Objects.equals(id, other.id)
+				&& Objects.equals(lastName, other.lastName);
 	}
 	
 	

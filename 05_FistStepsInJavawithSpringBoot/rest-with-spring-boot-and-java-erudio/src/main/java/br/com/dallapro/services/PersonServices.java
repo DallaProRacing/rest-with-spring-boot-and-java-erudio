@@ -1,69 +1,61 @@
 package br.com.dallapro.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.dallapro.exceptions.ResouseNotFoundException;
 import br.com.dallapro.model.Person;
+import br.com.dallapro.repositories.PersonRepository;
 
 @Service
 public class PersonServices {
-	  private final AtomicLong counter = new AtomicLong();
+	 
 	  private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
+	  
+	  @Autowired
+	  PersonRepository repository;
 	  
 	  public Person create(Person person) {
 	  
 		  logger.info("Creating one person!");
-		  return person;
+		  return repository.save(person);
 	  }
 	  
 	  
 	  public Person update(Person person) {		  
 		  logger.info("Updating one person!");
-		  return person;
+		  var entity = repository.findById(person.getId())
+				  .orElseThrow(()-> new ResouseNotFoundException("No records found for this ID!!!"));		  		  
+		 
+		  entity.setFirstName(person.getFirstName());
+		  entity.setLastName(person.getLastName());
+		  entity.setAddress(person.getAddress());
+		  entity.setGender(person.getGender());		  
+		  return repository.save(person);
+	  }
+	  	  
+	  public void delete(Long id) {		  
+		  logger.info("Deleting one person!");
+		  var entity = repository.findById(id)
+				  .orElseThrow(()-> new ResouseNotFoundException("No records found for this ID!!!"));		  		  
+		repository.delete(entity);	 
 	  }
 	  
-	  public void delete(String id) {		  
-		  logger.info("Deleting one person!");		  
-	  }
 	  
 	  
-	  
-	  public List<Person> findAll(){
-		  
-		  logger.info("Finding all people!");
-		  List<Person> persons = new ArrayList<>();
-		  for (int i = 0; i < 8; i++) {
-			Person persson = mckPerson(i);
-			persons.add(persson);
-		}
-		return persons ;
+	  public List<Person> findAll(){		  
+		logger.info("Finding all people!");		  		  
+		return repository.findAll() ;
 	  }
 
-	public Person findById (String id) {	
-		
-		  logger.info("Finding one person");
-		  Person person = new Person();
-		  person.setId(counter.incrementAndGet());
-		  person.setFirstName("Ruan");
-		  person.setLasttName("Dalla Rosa");
-		  person.setAddress("Barra");
-		  person.setGener("Male");
-		  return person;		  		  
+	public Person findById (Long id) {		
+		  logger.info("Finding one person");		  
+		  return repository.findById(id)
+				  .orElseThrow(()-> new ResouseNotFoundException("No records found for this ID!!!"));		  		  
 	  }
 	  
-	 private Person mckPerson(int i) {
-		 
-		  Person person = new Person();
-		  person.setId(counter.incrementAndGet());
-		  person.setFirstName("Person name"+ i);
-		  person.setLasttName("Last name" + i);
-		  person.setAddress("Some address in Brasil" + i);
-		  person.setGener("Male");
-		  return person;		
-		}
 }
