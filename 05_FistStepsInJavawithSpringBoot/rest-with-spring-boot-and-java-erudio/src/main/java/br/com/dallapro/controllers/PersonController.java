@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.dallapro.model.Person;
+import br.com.dallapro.data.vo.v1.PersonVo;
+
 import br.com.dallapro.services.PersonServices;
 
 @RestController
@@ -26,26 +26,26 @@ public class PersonController {
 	private PersonServices service;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person findById(@PathVariable(value = "id")Long id) throws Exception{
+	public PersonVo findById(@PathVariable(value = "id")Long id) throws Exception{
 		return service.findById(id);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Person> findAll() {
+	public List<PersonVo> findAll() {
 		return service.findAll();
 	}
 	
 	@PostMapping(
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person create(@RequestBody Person person) {
+	public PersonVo  create(@RequestBody PersonVo person) {
 		return service.create(person);
 	}
 	
 	@PutMapping(
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person Update(@RequestBody Person person) {
+	public PersonVo Update(@RequestBody PersonVo person) {
 		return service.update(person);
 	}
 	

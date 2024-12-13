@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.dallapro.data.vo.v1.PersonVo;
 import br.com.dallapro.exceptions.ResouseNotFoundException;
+import br.com.dallapro.mapper.Mapper;
 import br.com.dallapro.model.Person;
 import br.com.dallapro.repositories.PersonRepository;
 
@@ -19,14 +21,15 @@ public class PersonServices {
 	  @Autowired
 	  PersonRepository repository;
 	  
-	  public Person create(Person person) {
-	  
+	  public PersonVo create(PersonVo person) {	  
 		  logger.info("Creating one person!");
-		  return repository.save(person);
+		  var entity = Mapper.parseObject(person, Person.class);
+		  var vo = Mapper.parseObject(repository.save(entity),PersonVo.class);
+		  return vo;
 	  }
 	  
 	  
-	  public Person update(Person person) {		  
+	  public PersonVo update(PersonVo person) {		  
 		  logger.info("Updating one person!");
 		  var entity = repository.findById(person.getId())
 				  .orElseThrow(()-> new ResouseNotFoundException("No records found for this ID!!!"));		  		  
@@ -35,7 +38,8 @@ public class PersonServices {
 		  entity.setLastName(person.getLastName());
 		  entity.setAddress(person.getAddress());
 		  entity.setGender(person.getGender());		  
-		  return repository.save(person);
+		  var vo = Mapper.parseObject(repository.save(entity),PersonVo.class);
+		  return vo;
 	  }
 	  	  
 	  public void delete(Long id) {		  
@@ -43,19 +47,19 @@ public class PersonServices {
 		  var entity = repository.findById(id)
 				  .orElseThrow(()-> new ResouseNotFoundException("No records found for this ID!!!"));		  		  
 		repository.delete(entity);	 
-	  }
+	  }  
 	  
 	  
-	  
-	  public List<Person> findAll(){		  
+	  public List<PersonVo> findAll(){		  
 		logger.info("Finding all people!");		  		  
-		return repository.findAll() ;
+		return Mapper.parseListObjects(repository.findAll(), PersonVo.class);
 	  }
 
-	public Person findById (Long id) {		
+	public PersonVo findById (Long id) {		
 		  logger.info("Finding one person");		  
-		  return repository.findById(id)
+		  var entity = repository.findById(id)
 				  .orElseThrow(()-> new ResouseNotFoundException("No records found for this ID!!!"));		  		  
-	  }
+	return Mapper.parseObject(entity, PersonVo.class);  
+	}
 	  
 }
